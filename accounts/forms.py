@@ -83,9 +83,7 @@ class RegisterForm(forms.Form):
         username = self.cleaned_data['username']
         pattern = r'^1[0-9]{10}$'
         if not re.search(pattern, username):
-            raise forms.ValidationError('手机号%s输入不正确',
-                                        code='invalid_phone',
-                                        params=(username, ))
+            raise forms.ValidationError('手机号%s输入不正确', code='invalid_phone', params=(username, ))
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('手机号已经被使用')
         return username
@@ -179,14 +177,15 @@ class ModifyForm(forms.Form):
         """ 修改信息 """
         data = self.cleaned_data
         print('data         ',data)
-        version=request.headers.get('version', '')
-        source=request.headers.get('source', '')
+        version = request.headers.get('version', '')
+        source = request.headers.get('source', '')
         ip = request.META.get('REMOTE_ADDR', '')
         try:
             user = User.objects.get(username=data.get('username'))
             profile = user.profile
             user.avatar = data.get('avatar', user.avatar)
             user.email = data.get('email', user.email)
+            profile.email = data.get('email', user.email)
             profile.real_name = data.get('real_name', profile.real_name)
             profile.age = data.get('age', None)# 上边我已做过传默认值了，所以这个None不会生效
             profile.sex = data.get('sex', None)

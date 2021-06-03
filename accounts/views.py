@@ -13,39 +13,6 @@ from utils.response import BadRequestJsonResponse, MethodNotAllowedJsonResponse,
     ServerErrorJsonResponse
 from accounts import serializers
 
-
-def user_login(request):
-    """ 用户登录 """
-    if request.method == 'POST':
-        # Form表单默认属性顺序(self, data=None, files=None, auto_id='id_%s', prefix=None,
-        #                  initial=None, error_class=ErrorList, label_suffix=None,
-        #                  empty_permitted=False, field_order=None, use_required_attribute=None, renderer=None):
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            form.do_login(request)
-            print('表单验证通过')
-            return redirect('/accounts/user/info/')
-        else:
-            print(form.errors)
-    else:
-        form = LoginForm()
-    return render(request, 'user_login.html', {'form': form})
-
-# 当打开用户信息时候发现没有将会自动跳转括号内路径，也可以在settings里设置LOGIN_URL = '/accounts/user/login/'
-# @login_required(login_url='/accounts/user/login/')
-@login_required
-def user_info(request):
-    """ 用户信息 """
-    print(request.user)
-    return render(request, 'user_info.html')
-
-
-def user_logout(request):
-    """ 用户退出登录 """
-    logout(request)
-    return redirect('/accounts/user/info/')
-
-
 def user_api_login(request):
     """ 用户登录接口-POST """
     # 获取输入的内容
