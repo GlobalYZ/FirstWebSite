@@ -24,14 +24,11 @@ class MyUserAdmin(UserAdmin):
     def disable_user(self, request, queryset):
         """ 批量禁用用户 """
         queryset.update(is_active=False)
-
     disable_user.short_description = '批量禁用用户'
-
 
     def enable_user(self, request, queryset):
         """ 批量启用用户 """
         queryset.update(is_active=True)
-
     enable_user.short_description = '批量启用用户'
 
 
@@ -40,7 +37,7 @@ class ProfileAdmin(admin.ModelAdmin):
     """ 用户详细信息表 """
     list_display = ('format_username', 'sex', 'age', 'created_at')
     # 每页显示5条数据
-    list_per_page = 5
+    list_per_page = 20
     # 关联的字段一次性查出，减少查询次数
     list_select_related = ('user', )
     # 快捷搜索
@@ -57,6 +54,6 @@ class ProfileAdmin(admin.ModelAdmin):
         :param obj: Profile
         :return:
         """
-        return obj.username[:3] + '***'
+        return obj.username[:3] + '***' + obj.username[7:]
     # 修改列名称
     format_username.short_description = '用户名'

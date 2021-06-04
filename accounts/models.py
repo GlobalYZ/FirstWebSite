@@ -19,6 +19,10 @@ class User(AbstractUser):# 扩展出来的字段，继承AbstractUser
         """ 保存登录历史 """
         self.login_records.create(**kwargs)
 
+    def get_avatar_url(self):
+        '''返回头像的url'''
+        return str(self.avatar)
+
 
 class Profile(models.Model):
     """ 用户详细信息 """

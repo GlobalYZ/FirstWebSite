@@ -12,4 +12,6 @@ urlpatterns = [
     path('user/api/register/', views.UserRegisterView.as_view(), name='user_api_register'),
     # 用户修改
     path('user/api/modify/', views.UserModifyView.as_view(), name='user_api_register'),
+    # 测试上传
+    path('user/api/avatar/', views.UserAvatar.as_view()),  # 新增
 ]

@@ -148,7 +148,6 @@ class ModifyForm(forms.Form):
     """ 用户修改信息 """
     username = forms.CharField(label='手机号码', max_length=16, required=True, error_messages={'required': '请输入手机号码'})
     real_name = forms.CharField(label='真实姓名', max_length=32, required=False, error_messages={'required': '姓名不可用'})
-    avatar = forms.CharField(label='头像', max_length=32, required=False, error_messages={'required': '头像不可用'})
     email = forms.CharField(label='电子邮箱', max_length=128, required=False, error_messages={'required': 'Email不正确'})
     sex = forms.IntegerField(label='性别', required=False, error_messages={'required': '性别有误'})
     age = forms.IntegerField(label='年龄', required=False, error_messages={'required': '年龄有误'})
@@ -183,7 +182,6 @@ class ModifyForm(forms.Form):
         try:
             user = User.objects.get(username=data.get('username'))
             profile = user.profile
-            user.avatar = data.get('avatar', user.avatar)
             user.email = data.get('email', user.email)
             profile.email = data.get('email', user.email)
             profile.real_name = data.get('real_name', profile.real_name)

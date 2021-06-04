@@ -1,4 +1,5 @@
 import json
+import os
 
 from django import http
 from django.contrib.auth import logout
@@ -9,6 +10,7 @@ from django.views.generic import FormView
 from django.views.generic.base import View
 
 from accounts.forms import LoginForm, RegisterForm, ModifyForm
+from accounts.models import User
 from utils.response import BadRequestJsonResponse, MethodNotAllowedJsonResponse, UnauthorizedJsonResponse, \
     ServerErrorJsonResponse
 from accounts import serializers
@@ -118,3 +120,24 @@ class UserModifyView(FormView):
         """ 表单没有通过验证 """
         err_list = json.loads(form.errors.as_json())
         return BadRequestJsonResponse(err_list)
+
+class UserAvatar(View):
+
+    def get(self, request):
+        return render(request, 'upload.html')
+    def post(self, request):
+        file_obj = request.FILES.get('avatar')
+        if file_obj is not None:
+
+            if not os.path.exists('media/avatar/username'):
+                os.mkdir('media/avatar/username')
+            # user = User.objects.get(username=request.POST.get('username'))
+            file_path = 'media/avatar/'+'username'+'/'+ file_obj.name
+            # user.avatar = file_obj
+            with open(file_path, 'wb+') as f:
+                for chunk in file_obj.chunks():# 在f.chunks()上循环而不是用read()保证大文件不会大量使用你的系统内存。
+                    f.write(chunk)
+            print(file_obj)
+            return HttpResponse(file_path)
+        else:
+            return HttpResponse('ok')

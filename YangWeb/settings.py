@@ -127,7 +127,7 @@ STATICFILES_DIRS = [
 # 富文本编辑器文件上传的位置
 CKEDITOR_UPLOAD_PATH = "uploads/"
 MEDIA_URL = '/media/' # 上传静态文件用到
-MEDIA_ROOT = os.path.join(BASE_DIR, 'medias')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
