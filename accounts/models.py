@@ -1,11 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from utils.models import CommonModel
 
 
+def set_avatar(user,filename):
+    return 'avatar/{username}/{filename}'.format(username=user.username, filename=filename)
+
 class User(AbstractUser):# 扩展出来的字段，继承AbstractUser
     """ 用户模型 """
-    avatar = models.ImageField('用户头像', upload_to='avatar/%Y%m', null=True, blank=True)
+    avatar = models.ImageField('用户头像', upload_to=set_avatar,
+                               null=True, blank=True, default='avatar/default.jpeg')
     nickname = models.CharField('昵称', max_length=32, unique=True)
 
     class Meta:
@@ -14,14 +18,11 @@ class User(AbstractUser):# 扩展出来的字段，继承AbstractUser
     @property
     def avatar_url(self):
         return self.avatar.url if self.avatar else ''
-
     def add_login_record(self, **kwargs):
         """ 保存登录历史 """
         self.login_records.create(**kwargs)
 
-    def get_avatar_url(self):
-        '''返回头像的url'''
-        return str(self.avatar)
+
 
 
 class Profile(models.Model):

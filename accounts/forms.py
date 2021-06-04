@@ -2,6 +2,7 @@ import re
 from django import forms
 from django.contrib.auth import authenticate, login
 from django.core.cache import cache
+from django.shortcuts import render
 from django.utils.timezone import now
 from django.db import transaction
 from accounts.models import User, Profile
@@ -195,6 +196,32 @@ class ModifyForm(forms.Form):
             print(e)
             return None
 
+
+class AvatarForm(forms.Form):
+    def get(self, request):
+        return render(request, 'upload.html')
+    username = forms.CharField(label='手机号码', max_length=16, required=True, error_messages={'required': '请输入手机号码'})
+    avatar = forms.ImageField(label='头像', required=False, error_messages={'required': '头像不可用'})
+    @transaction.atomic
+    def modify(self, request):
+        """ 修改信息 """
+        data = self.cleaned_data
+        avatar = request.FILES.get('avatar', '')
+        version = request.headers.get('version', '')
+        source = request.headers.get('source', '')
+        ip = request.META.get('REMOTE_ADDR', '')
+        try:
+            user = User.objects.get(username=data.get('username'))
+            profile = user.profile
+            user.avatar.delete()
+            user.avatar = avatar
+            user.save()
+            profile.save()
+            user.add_login_record(username=user.username, ip=ip, source=source, version=version)
+            return user, profile
+        except Exception as e:
+            print(e)
+            return None
 
 
 
