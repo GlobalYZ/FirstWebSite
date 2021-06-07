@@ -57,6 +57,7 @@ def question_list(request):
 # 用面向对象的方式来实现，比登录接口要简单
 class SmsCodeView(FormView):
     form_class = SendSmsCodeForm
+    # http_method_names = ['post']# 只能是post请求，其他方式不被允许
     def form_valid(self, form):# 重写
         """ 表单已经通过验证 """
         data = form.send_sms_code()
