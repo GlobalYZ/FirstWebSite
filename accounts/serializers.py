@@ -6,6 +6,7 @@ class UserSerializer(BaseSerializer):
     def to_dict(self):# 重写
         user = self.obj
         return {
+            'id': user.pk,
             'username': user.username,
             'nickname': user.nickname,
             'avatar': user.avatar_url,# 头像地址

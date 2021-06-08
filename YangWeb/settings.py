@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'accounts',
     # 系统模块
     'system',
+    # 作品模块
+    'works',
 ]
 
 MIDDLEWARE = [

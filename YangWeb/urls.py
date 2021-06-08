@@ -11,6 +11,8 @@ urlpatterns = [
     path('system/', include('system.urls')),
     # 用户账户模块
     path('accounts/', include('accounts.urls')),
+    # 用户作品模块
+    path('works/', include('works.urls')),
 ]
 
 '''下面是Django框架提供的一个内置视图，可以按照它给定的规则进行配置，在开发的时候把项目当中的静态文件放到Django的内置服务器当中，
