@@ -12,6 +12,7 @@ class WorksForm(forms.Form):
     coverImg = forms.ImageField(label='封面图', required=False, error_messages={'required': '图片不可用'})
     mainImg = forms.ImageField(label='主图', required=False, error_messages={'required': '图片不可用'})
     types = forms.IntegerField(label='类型', required=False, error_messages={'required': '类型有误'})
+    origin = forms.IntegerField(label='来源', required=False, error_messages={'required': '来源有误'})
 
     @transaction.atomic
     def upload(self, request):
@@ -23,13 +24,14 @@ class WorksForm(forms.Form):
         coverImg = request.FILES.get('coverImg', '')
         mainImg = request.FILES.get('mainImg', '')
         types = data['types']
+        origin = data['origin']
         version = request.headers.get('version', '')
         source = request.headers.get('source', '')
         ip = request.META.get('REMOTE_ADDR', '')
         try:
             user = User.objects.get(username=username)
             artwork = Artwork.objects.create(
-                name=name, desc=desc, coverImg=coverImg, mainImg=mainImg, types=types, user=user
+                name=name, desc=desc, coverImg=coverImg, mainImg=mainImg, types=types, origin=origin, user=user
             )
             user.save()
             user.add_login_record(username=user.username, ip=ip, source=source, version=version)

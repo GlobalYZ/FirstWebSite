@@ -23,5 +23,6 @@ class UserProfileSerializer(BaseSerializer):
             'sex': profile.sex,# 返回0或1
             'sex_display': profile.get_sex_display(),# 这个方法会返回对应的sex的中文信息，方便理解
             'age': profile.age,
+            'sign': profile.sign,
         }
 

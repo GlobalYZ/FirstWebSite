@@ -152,6 +152,7 @@ class ModifyForm(forms.Form):
     email = forms.CharField(label='电子邮箱', max_length=128, required=False, error_messages={'required': 'Email不正确'})
     sex = forms.IntegerField(label='性别', required=False, error_messages={'required': '性别有误'})
     age = forms.IntegerField(label='年龄', required=False, error_messages={'required': '年龄有误'})
+    sign = forms.CharField(label='签名', max_length=128, required=False, error_messages={'required': '签名不正确'})
 
     def clean_age(self):
         """ 验证用户的年龄 """
@@ -176,7 +177,7 @@ class ModifyForm(forms.Form):
     def modify(self, request):
         """ 修改信息 """
         data = self.cleaned_data
-        print('data         ',data)
+        print('data         ', data)
         version = request.headers.get('version', '')
         source = request.headers.get('source', '')
         ip = request.META.get('REMOTE_ADDR', '')
@@ -188,6 +189,7 @@ class ModifyForm(forms.Form):
             profile.real_name = data.get('real_name', profile.real_name)
             profile.age = data.get('age', None)# 上边我已做过传默认值了，所以这个None不会生效
             profile.sex = data.get('sex', None)
+            profile.sign = data.get('sign', None)
             user.save()
             profile.save()
             user.add_login_record(username=user.username, ip=ip, source=source, version=version)

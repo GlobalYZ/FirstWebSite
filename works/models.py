@@ -17,6 +17,7 @@ class Artwork(CommonModel):
     IMG_CHOICES = (
         (0, '搞笑类'),
         (1, '其它类'),
+
     )
     ORI_CHOICES = (
         (0, '原创'),
@@ -32,8 +33,13 @@ class Artwork(CommonModel):
     types = models.SmallIntegerField('展现的类型', choices=IMG_CHOICES, default=0)
     start_time = models.DateTimeField('生效开始时间', null=True, blank=True)
     end_time = models.DateTimeField('生效结束的时间', null=True, blank=True)
-    target_url = models.CharField('跳转的地址', max_length=255, null=True, blank=True)
+    score = models.FloatField('评分', default=5)
     user = models.ForeignKey(User, related_name='art_work', on_delete=models.CASCADE)
+
+    @property
+    def comment_count(self):
+        """ 评论总数 """
+        return self.comments.filter(is_valid=True).count()
 
     @property
     def coverImg_url(self):
@@ -48,6 +54,40 @@ class Artwork(CommonModel):
         ordering = ['name']
         verbose_name = '作品表'
         verbose_name_plural = '作品表'
-
     def __str__(self):
         return self.name
+
+
+class Comment(CommonModel):
+    """ 评论及回复 """
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE, verbose_name='评论人')
+    artwork = models.ForeignKey(Artwork, related_name='comments', on_delete=models.CASCADE, verbose_name='评论的作品')
+    content = models.TextField(verbose_name='评论的内容', blank=True, null=True)
+    is_Top = models.BooleanField(verbose_name='是否置顶', default=False)
+    love_count = models.IntegerField(verbose_name='点赞次数', default=0)
+    score = models.FloatField(verbose_name='评分', default=5)
+    ip_address = models.CharField(verbose_name='IP地址', blank=True, null=True, max_length=64)
+
+    class Meta:
+        db_table = 'works_comment'
+        ordering = ['-love_count', '-created_at']
+        verbose_name = '评论及回复'
+        verbose_name_plural = '评论及回复'
+
+    def __str__(self):
+        return self.content
+
+class LoveCount(CommonModel):
+    """ 点赞 """
+    user = models.ForeignKey(User, related_name='lovecounts', on_delete=models.CASCADE, verbose_name='点赞人')
+    artwork = models.ForeignKey(Artwork, related_name='lovecounts', on_delete=models.CASCADE, verbose_name='点赞的作品')
+    count = models.IntegerField(verbose_name='点赞次数', default=0)
+
+    class Meta:
+        db_table = 'works_lovecount'
+        ordering = ['-count', '-created_at']
+        verbose_name = '点赞'
+        verbose_name_plural = '点赞'
+
+    def __str__(self):
+        return self.artwork.name

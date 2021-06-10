@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, User
 from utils.models import CommonModel
 
 
-def set_avatar(user,filename):
+def set_avatar(user, filename):
     return 'avatar/{username}/{filename}'.format(username=user.username, filename=filename)
 
 class User(AbstractUser):# 扩展出来的字段，继承AbstractUser
@@ -45,6 +45,7 @@ class Profile(models.Model):
     is_phone_valid = models.BooleanField('是否已经验证', default=False)
     sex = models.SmallIntegerField('性别', default=1, choices=SEX_CHOICES)
     age = models.SmallIntegerField('年龄', default=0)
+    sign = models.CharField(verbose_name='签名', max_length=128, blank=True, null=True)
     source = models.CharField('登录的来源', max_length=16, null=True)
     version = models.CharField('登录的版本', max_length=16, null=True)
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
