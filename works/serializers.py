@@ -17,7 +17,7 @@ class WorksSerializer(BaseSerializer):
             'types': obj.types,
             'score': obj.score,
             'origin': obj.origin,
-            'love_counts': obj.lovecounts.count(),  # 点赞总数
+            'love_counts': obj.love_counts,  # 点赞总数
             'counts': obj.comments.count(),  # 评论总数
 
         }
@@ -35,8 +35,8 @@ class WorkListSerializer(BaseListPageSerializer):
             'types': obj.types,
             'score': obj.score,
             'origin': obj.origin,
-            'love_counts': obj.lovecounts.count(),
-            'comment_count': obj.comment_count,
+            'love_counts': obj.love_counts,
+            'comment_count': obj.comments.count(),
         }
 
 
@@ -54,6 +54,6 @@ class CommentListSerializer(BaseListPageSerializer):
             'pk': obj.pk,
             'content': obj.content,
             'is_top': obj.is_Top,
-            'love_count': obj.love_count,
+            'love_counts': obj.love_counts,
             'score': obj.score,
         }
