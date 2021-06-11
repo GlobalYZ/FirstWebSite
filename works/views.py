@@ -2,14 +2,13 @@ import json
 
 from django import http
 from django.db.models import Q
-from django.shortcuts import render
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, ListView, DetailView
 
 from accounts import serializers
 from works import serializers
 from utils.response import ServerErrorJsonResponse, BadRequestJsonResponse, NotFoundJsonResponse
 from works.forms import WorksForm
-from works.models import Artwork
+from works.models import Artwork, Comment
 
 
 class ArtWork(FormView):
@@ -36,7 +35,7 @@ class ArtWork(FormView):
 
 class WorkListView(ListView):
     """ 作品列表接口 """
-    paginate_by = 8
+    paginate_by = 2
     def get_queryset(self):
         """ 重写查询方法 """
         query = Q(is_valid=True)
@@ -59,3 +58,40 @@ class WorkListView(ListView):
             return http.JsonResponse(data, status=201)
         else:
             return NotFoundJsonResponse()
+
+class ArtWorkDetailView(DetailView):
+    """ 作品详细信息 """
+
+    def get_queryset(self):# 配置一下数据的来源
+        # return Sight.objects.filter(is_valid=True)
+        return Artwork.objects.all()
+
+    def render_to_response(self, context, **response_kwargs):# 重写此函数
+        page_obj = context['object']# 注意取的是object不是page_obj了
+        if page_obj is not None:
+            if page_obj.is_valid == False:
+                return NotFoundJsonResponse()
+            data = serializers.WorksSerializer(page_obj).to_dict()
+            return http.JsonResponse(data)
+        return NotFoundJsonResponse()
+
+class CommentListView(ListView):
+    """ 作品下的评论列表 """
+    paginate_by = 10
+
+    def get_queryset(self):
+        # 根据作品ID查询作品
+        artwork_id = self.kwargs.get('pk', None)
+        artwork = Artwork.objects.filter(pk=artwork_id, is_valid=True).first()
+        if artwork:
+            # return Comment.objects.filter(is_valid=True, sight=sight)
+            return artwork.comments.filter(is_valid=True)
+        return Comment.objects.none()
+
+    def render_to_response(self, context, **response_kwargs):
+        """ 重写响应的返回 """
+        page_obj = context['page_obj']# 此时所有的信息都在context里，page_obj里有分页信息和数据信息
+        if page_obj is not None:
+            data = serializers.CommentListSerializer(page_obj).to_dict()
+            return http.JsonResponse(data)
+        return  NotFoundJsonResponse()

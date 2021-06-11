@@ -34,7 +34,7 @@ class Artwork(CommonModel):
     start_time = models.DateTimeField('生效开始时间', null=True, blank=True)
     end_time = models.DateTimeField('生效结束的时间', null=True, blank=True)
     score = models.FloatField('评分', default=5)
-    user = models.ForeignKey(User, related_name='art_work', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='artworks', on_delete=models.CASCADE)
 
     @property
     def comment_count(self):
@@ -54,6 +54,7 @@ class Artwork(CommonModel):
         ordering = ['name']
         verbose_name = '作品表'
         verbose_name_plural = '作品表'
+
     def __str__(self):
         return self.name
 
@@ -76,6 +77,7 @@ class Comment(CommonModel):
 
     def __str__(self):
         return self.content
+
 
 class LoveCount(CommonModel):
     """ 点赞 """
