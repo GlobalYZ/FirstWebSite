@@ -17,7 +17,6 @@ class Artwork(CommonModel):
     IMG_CHOICES = (
         (0, '搞笑类'),
         (1, '其它类'),
-
     )
     ORI_CHOICES = (
         (0, '原创'),
@@ -52,7 +51,7 @@ class Artwork(CommonModel):
 
     class Meta:
         db_table = 'works_artwork'
-        ordering = ['name']
+        ordering = ['-love_counts']
         verbose_name = '作品表'
         verbose_name_plural = '作品表'
 
@@ -72,7 +71,7 @@ class Comment(CommonModel):
 
     class Meta:
         db_table = 'works_comment'
-        ordering = ['-love_counts', '-created_at']
+        ordering = ['-created_at']
         verbose_name = '评论及回复'
         verbose_name_plural = '评论及回复'
 

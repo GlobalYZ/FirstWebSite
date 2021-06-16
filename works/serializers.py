@@ -13,7 +13,7 @@ class WorksSerializer(BaseSerializer):
             'desc': obj.desc,
             'coverImg': obj.coverImg_url,  # 封面图地址
             'mainImg': obj.mainImg_url,
-            'avatar': obj.user.avatar.url,
+            'avatar': obj.user.avatar_url,
             'types': obj.types,
             'score': obj.score,
             'origin': obj.origin,
@@ -31,7 +31,7 @@ class WorkListSerializer(BaseListPageSerializer):
             'user': obj.user.nickname,
             'name': obj.name,
             'coverImg': obj.coverImg_url,  # 封面图地址
-            'avatar': obj.user.avatar.url,
+            'avatar': obj.user.avatar_url,
             'types': obj.types,
             'score': obj.score,
             'origin': obj.origin,
@@ -48,7 +48,7 @@ class CommentListSerializer(BaseListPageSerializer):
         return {
             'user': {
                 'pk': user.pk,
-                'avatar': user.avatar.url,
+                'avatar': user.avatar_url,
                 'nickname': user.nickname
             },
             'pk': obj.pk,
