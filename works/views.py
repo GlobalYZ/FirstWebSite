@@ -6,7 +6,7 @@ from django.views.generic import FormView, ListView, DetailView
 
 from works import serializers
 from utils.response import ServerErrorJsonResponse, BadRequestJsonResponse, NotFoundJsonResponse
-from works.forms import WorksForm
+from works.forms import WorksForm, CommentForm
 from works.models import Artwork, Comment
 
 
@@ -23,6 +23,28 @@ class ArtWork(FormView):
             data = {
                 'user': serializers.UserSerializer(user).to_dict(),
                 'artwork': serializers.WorksSerializer(artwork).to_dict()
+            }
+            return http.JsonResponse(data, status=201)
+        return ServerErrorJsonResponse()
+
+    def form_invalid(self, form):
+        """ 表单没有通过验证 """
+        err_list = json.loads(form.errors.as_json())
+        return BadRequestJsonResponse(err_list)
+
+
+class Comment(FormView):
+    """ 用户上传评论 """
+    form_class = CommentForm
+    http_method_names = ['post']
+
+    def form_valid(self, form):
+        """ 表单已经通过验证 """
+        result = form.upload(request=self.request)
+        if result is not None:
+            comment = result
+            data = {
+                'comment': serializers.CommentSerializer(comment).to_dict()
             }
             return http.JsonResponse(data, status=201)
         return ServerErrorJsonResponse()

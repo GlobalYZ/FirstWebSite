@@ -33,6 +33,20 @@ class WorksSerializer(BaseSerializer):
 
         }
 
+class CommentSerializer(BaseSerializer):
+    """ 评论成功的返回信息 """
+    def to_dict(self):# 重写
+        comment = self.obj
+        return {
+            'pk': comment.artwork.pk,
+            'id': comment.user.pk,
+            'username': comment.user.username,
+            'nickname': comment.user.nickname,
+            'avatar': comment.user.avatar_url,# 头像地址
+            'score': comment.score,
+            'time': comment.created_at,
+        }
+
 
 class WorkListSerializer(BaseListPageSerializer):
     """ 作品列表 """
@@ -67,4 +81,5 @@ class CommentListSerializer(BaseListPageSerializer):
             'is_top': obj.is_Top,
             'love_counts': obj.love_counts,
             'score': obj.score,
+            'time': obj.created_at,
         }

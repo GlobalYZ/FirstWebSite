@@ -5,6 +5,8 @@ from works import views
 urlpatterns = [
     # 作品上传
     path('api/artwork/', views.ArtWork.as_view(), name='works_api_artwork'),
+    # 评论上传
+    path('api/comment/', views.Comment.as_view(), name='works_api_comment'),
     # 作品列表信息
     path('api/list/', views.WorkListView.as_view(), name='works_api_list'),
     # 作品详细信息
