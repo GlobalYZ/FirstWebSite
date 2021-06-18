@@ -25,9 +25,9 @@ class WorksSerializer(BaseSerializer):
             'coverImg': obj.coverImg_url,  # 封面图地址
             'mainImg': obj.mainImg_url,
             'avatar': obj.user.avatar_url,
-            'types': obj.types,
+            'types': obj.IMG_CHOICES[obj.types][1],
             'score': obj.score,
-            'origin': obj.origin,
+            'origin': obj.ORI_CHOICES[obj.origin][1],
             'love_counts': obj.love_counts,  # 点赞总数
             'counts': obj.comments.count(),  # 评论总数
 
@@ -57,9 +57,9 @@ class WorkListSerializer(BaseListPageSerializer):
             'name': obj.name,
             'coverImg': obj.coverImg_url,  # 封面图地址
             'avatar': obj.user.avatar_url,
-            'types': obj.types,
+            'types': obj.IMG_CHOICES[obj.types][1],
             'score': obj.score,
-            'origin': obj.origin,
+            'origin': obj.ORI_CHOICES[obj.origin][1],
             'love_counts': obj.love_counts,
             'comment_count': obj.comments.count(),
         }
