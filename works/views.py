@@ -4,7 +4,6 @@ from django import http
 from django.db.models import Q
 from django.views.generic import FormView, ListView, DetailView
 
-from accounts import serializers
 from works import serializers
 from utils.response import ServerErrorJsonResponse, BadRequestJsonResponse, NotFoundJsonResponse
 from works.forms import WorksForm
@@ -35,7 +34,7 @@ class ArtWork(FormView):
 
 class WorkListView(ListView):
     """ 作品列表接口 """
-    paginate_by = 2
+    paginate_by = 8
     def get_queryset(self):
         """ 重写查询方法 """
         query = Q(is_valid=True)
